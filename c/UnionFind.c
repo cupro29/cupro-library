@@ -26,4 +26,3 @@ bool unite(int *ary, int x, int y){
 }
 bool same(int *ary, int x, int y){return find(ary, x) == find(ary, y);}
 int size(int *ary, int x){return -ary[find(ary, x)];}
-int main(){}
