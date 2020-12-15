@@ -1,2 +1,3 @@
 # cupro-library
-library for competitive programming
+競技プログラミング用のライブラリです。
+気が向いたら足していきます。
