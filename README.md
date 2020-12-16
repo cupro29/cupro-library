@@ -8,7 +8,7 @@
 ## 今あるやつと使用例
 ### C
 
-- UnionFind.c: UnionFind木 (Disjoint Set Union) 
+- UnionFind.c: UnionFind木
   [ACLPC-A](https://atcoder.jp/contests/practice2/submissions/16756037 "ACLPC-A")
 - avltree.c: AVL木（非再帰）
   [ABC168-E](https://atcoder.jp/contests/abc168/submissions/18408309 "ABC168-E")
@@ -29,6 +29,9 @@
 - rbt.c: 赤黒木
 - segtree.c: セグメント木
   [ACLPC-J](https://atcoder.jp/contests/practice2/submissions/16791514 "ACLPC-J")
+
+### C++
+- UnionFind.cpp: UnionFind木
 
 ### Brainf*ck
 
