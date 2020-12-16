@@ -7,7 +7,10 @@
 - UnionFind.c: UnionFind木 (Disjoint Set Union)
 - avltree.c: AVL木（非再帰）
 - avltree_rec.c: AVL木（再帰）
+- convolution.c: 畳み込み
 - fenwicktree.c: Fenwick木 (Binary Indexed Tree)
+- fft.c: FFT
+- maxflow.c: 最大流
 - rbt.c: 赤黒木
 - segtree.c: セグメント木
 
