@@ -2,6 +2,9 @@
 競技プログラミング用のライブラリです。
 気が向いたら足していきます。
 
+:sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi:
+:sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi:
+
 ## 今あるやつと使用例
 ### C
 
