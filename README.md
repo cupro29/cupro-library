@@ -37,3 +37,6 @@
 
 - increment.bf: マルチバイト整数(符号無し)のインクリメント
   [ABC143-C](https://atcoder.jp/contests/abc143/submissions/18804658 "ABC143-C")
+
+### Rust
+  [cuprolib_rs](https://github.com/cupro29/cuprolib_rs "こっち")
