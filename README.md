@@ -2,8 +2,8 @@
 競技プログラミング用のライブラリです。
 気が向いたら足していきます。
 
-:sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi:
-:sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi:
+:beer: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :beer:
+:beer: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :sushi: :beer:
 
 ## 今あるやつと使用例
 ### C
@@ -39,4 +39,4 @@
   [ABC143-C](https://atcoder.jp/contests/abc143/submissions/18804658 "ABC143-C")
 
 ### Rust
-  [cuprolib_rs](https://github.com/cupro29/cuprolib_rs "こっち")
+  [こっち](https://github.com/cupro29/cuprolib_rs "cuprolib-rs")
