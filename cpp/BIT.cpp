@@ -1,18 +1,18 @@
 #include<vector>
 template <class T>
 struct BIT {
-	BIT(int n): sz(n), d(sz) {}
-	void add(int p, T x){
+	BIT(std::size_t n): sz(n), d(sz) {}
+	void add(std::size_t p, T x){
 		p++;
 		while(p<=sz){
 			d[p-1]+=x;
 			p+=p&-p;
 		}
 	}
-	T range(int l, int r){
+	T range(std::size_t l, std::size_t r){
 		return sum(r)-sum(l);
 	}
-	T sum(int r){
+	T sum(std::size_t r){
 		T res=0;
 		while(r>0){
 			res+=d[r-1];
@@ -21,6 +21,6 @@ struct BIT {
 		return res;
 	}
 private:
-	int sz;
-	vector<T> d;
+	std::size_t sz;
+	std::vector<T> d;
 };
