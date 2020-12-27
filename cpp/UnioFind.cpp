@@ -1,7 +1,7 @@
 #include<vector>
 struct UnionFind {
 	std::vector<int> d;
-	UnionFind(int n=0): d(n,-1) {}
+	UnionFind(std::size_t n=0): d(n,-1) {}
 	int find(int x) {
 		if (d[x] < 0) return x;
 		return d[x] = find(d[x]);

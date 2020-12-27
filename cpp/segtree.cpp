@@ -12,7 +12,7 @@ struct segtree{
 		d[p] = x;
 		while(p>>1 > 0) update(p>>=1);
 	}
-	T get(std::size_t p){ return d[p+(1<<sz)]; }
+	T get(std::size_t p){ return d[p+sz]; }
 	T prod(std::size_t l, std::size_t r){
 		T sml = id, smr = id;
 		l += sz;
