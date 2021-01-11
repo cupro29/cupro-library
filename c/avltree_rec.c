@@ -17,8 +17,8 @@ node* left_rotate(node* x){
 	if(is_null(y)) return x;
 	(*x).right = (*y).left;
 	(*y).left = x;
-	(*x).rank = max(get_rank((*x).left), get_rank((*x).right));
-	(*y).rank = max(get_rank((*y).left), get_rank((*y).right));
+	(*x).rank = max(get_rank((*x).left), get_rank((*x).right)) + 1;
+	(*y).rank = max(get_rank((*y).left), get_rank((*y).right)) + 1;
 	return y;
 }
 node* right_rotate(node *y){
@@ -27,13 +27,14 @@ node* right_rotate(node *y){
 	if(is_null(x)) return y;
 	(*y).left = (*x).right;
 	(*x).right = y;
-	(*y).rank = max(get_rank((*y).left), get_rank((*y).right));
-	(*x).rank = max(get_rank((*x).left), get_rank((*x).right));
+	(*y).rank = max(get_rank((*y).left), get_rank((*y).right)) + 1;
+	(*x).rank = max(get_rank((*x).left), get_rank((*x).right)) + 1;
 	return x;
 }
 node* fixup(node *x){
 	if(is_null(x)) return NULL;
 	int l = get_rank((*x).left), r = get_rank((*x).right);
+	(*x).rank = max(l, r) + 1;
 	if(abs(l - r) <= 1) return x;
 	if(l - r == 2){
 		if(get_rank((*(*x).left).left) < get_rank((*(*x).left).right)){
