@@ -66,7 +66,7 @@ int max_right(Int arr[], int n, int l, bool (*f)(Int)){
 	}while((l & -l) != l);
 	return n;
 }
-int min_right(Int arr[], int n, int r, bool (*f)(Int)){
+int min_left(Int arr[], int n, int r, bool (*f)(Int)){
 	if(r == 0) return 0;
 	int lg = ceil_pow2(n);
 	int size = 1<<lg;
