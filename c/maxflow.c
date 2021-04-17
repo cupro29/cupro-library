@@ -12,8 +12,8 @@ typedef struct mf_edge{
 	struct mf_edge *next, *rev;
 } mf_edge;
 typedef mf_edge* edge;
-edge nil, G[MAX_V], iter[MAX_V];
-int level[MAX_V];
+static edge nil, G[MAX_V], iter[MAX_V];
+static int level[MAX_V];
 void add_edge(int _from, int _to, Cap cap){
 	edge go = (edge)malloc(sizeof(mf_edge));
 	edge back = (edge)malloc(sizeof(mf_edge));
@@ -23,7 +23,7 @@ void add_edge(int _from, int _to, Cap cap){
 	G[_to] = back;
 	return;
 }
-void maxflow_bfs(int s){
+static void maxflow_bfs(int s){
 	for(int i=0; i<MAX_V; i++)level[i] = -1;
 	int que[MAX_V], l = 0, r = 0;
 	level[s] = 0;
@@ -38,7 +38,7 @@ void maxflow_bfs(int s){
 		}
 	}
 }
-Cap maxflow_dfs(int v, int t, Cap f){
+static Cap maxflow_dfs(int v, int t, Cap f){
 	if(v == t) return f;
 	for(; iter[v] != nil; iter[v] = (*iter[v]).next){
 		edge e = iter[v];

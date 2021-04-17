@@ -19,7 +19,7 @@ Int* segtree(int n){
 	for(int i=0; i<=(1<<lg)*2; i++)res[i] = segtree_e;
 	return res;
 }
-void update(Int arr[], int k){arr[k] = segtree_op(arr[k*2], arr[2*k+1]);}
+static void update(Int arr[], int k){arr[k] = segtree_op(arr[k*2], arr[2*k+1]);}
 void set(Int arr[], int n, int p, Int x){
 	int lg = ceil_pow2(n);
 	p += 1<<lg;

@@ -11,7 +11,7 @@ typedef struct node{
 	struct node *left, *right;
 } node;
 int get_rank(node *x){return is_null(x)?-1:(*x).rank;}
-node* left_rotate(node* x){
+static node* left_rotate(node* x){
 	if(is_null(x)) return NULL;
 	node *y = (*x).right;
 	if(is_null(y)) return x;
@@ -21,7 +21,7 @@ node* left_rotate(node* x){
 	(*y).rank = max(get_rank((*y).left), get_rank((*y).right)) + 1;
 	return y;
 }
-node* right_rotate(node *y){
+static node* right_rotate(node *y){
 	if(is_null(y)) return NULL;
 	node *x = (*y).left;
 	if(is_null(x)) return y;
@@ -31,7 +31,7 @@ node* right_rotate(node *y){
 	(*x).rank = max(get_rank((*x).left), get_rank((*x).right)) + 1;
 	return x;
 }
-node* fixup(node *x){
+static node* fixup(node *x){
 	if(is_null(x)) return NULL;
 	int l = get_rank((*x).left), r = get_rank((*x).right);
 	(*x).rank = max(l, r) + 1;
@@ -65,7 +65,7 @@ node* insert(node *x, int t){
 	}
 	return fixup(x);
 }
-node* take_min(node *x){
+static node* take_min(node *x){
 	if(is_null(x)) return NULL;
 	if(is_null((*x).left)) return x;
 	node *res = take_min((*x).left);

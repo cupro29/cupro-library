@@ -2,7 +2,7 @@
 #include<string.h>
 #include<stdbool.h>
 
-long modpow(long x, long y, long m){
+static long modpow(long x, long y, long m){
 	long res = 1;
 	while(y){
 		if(y&1)res = res * x % m;
@@ -15,7 +15,7 @@ long modpow(long x, long y, long m){
 const long mod = 998244353;
 const long pr = 3;
 
-void butterfly(long a[], int h){
+static void butterfly(long a[], int h){
 	static bool first = true;
 	static long sum_e[30];
 	if(first){
@@ -51,7 +51,7 @@ void butterfly(long a[], int h){
 		}
 	}
 }
-void butterfly_inv(long a[], int h){
+static void butterfly_inv(long a[], int h){
 	static bool first = true;
 	static long sum_ie[30];
 	if(first){
