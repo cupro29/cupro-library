@@ -1,8 +1,6 @@
 #include<stdlib.h>
 #include<stdbool.h>
 
-bool is_null(void *p){return p==NULL;}
-int min(const int a, const int b){return a>b?b:a;}
 static int max(const int a, const int b){return a>b?a:b;}
 
 typedef struct node{
@@ -11,8 +9,11 @@ typedef struct node{
 	int size;
 	struct node *left, *right;
 } node;
-int get_rank(node *x){return is_null(x)?-1:(*x).rank;}
-int get_size(node *x){return is_null(x)?0:(*x).size;}
+typedef struct {
+	node *left, *right;
+} node_pair;
+int get_rank(node *x){return x == NULL ? -1 : (*x).rank;}
+int get_size(node *x){return x == NULL ?  0 : (*x).size;}
 static void update(node *x){
 		(*x).rank = max(get_rank((*x).left),get_rank((*x).right)) + 1;
 		(*x).size = get_size((*x).left) + get_size((*x).right) + 1;
@@ -27,9 +28,9 @@ static node* new_node(int k){
 	return res;
 }
 static node* left_rotate(node* x){
-	if(is_null(x)) return NULL;
+	if(x == NULL) return NULL;
 	node *y = (*x).right;
-	if(is_null(y)) return x;
+	if(y == NULL) return x;
 	(*x).right = (*y).left;
 	(*y).left = x;
 	update(x);
@@ -37,9 +38,9 @@ static node* left_rotate(node* x){
 	return y;
 }
 static node* right_rotate(node *y){
-	if(is_null(y)) return NULL;
+	if(y == NULL) return NULL;
 	node *x = (*y).left;
-	if(is_null(x)) return y;
+	if(x == NULL) return y;
 	(*y).left = (*x).right;
 	(*x).right = y;
 	update(y);
@@ -47,7 +48,7 @@ static node* right_rotate(node *y){
 	return x;
 }
 static node* fixup(node *x){
-	if(is_null(x)) return NULL;
+	if(x == NULL) return NULL;
 	int l = get_rank((*x).left), r = get_rank((*x).right);
 	if(abs(l - r) <= 1) return x;
 	if(l - r == 2){
@@ -65,7 +66,7 @@ static node* fixup(node *x){
 	return NULL;
 }
 node* insert(node *x, int t){
-	if(is_null(x)){
+	if(x == NULL){
 		return new_node(t);
 	}
 	if(t < (*x).key){
@@ -77,8 +78,8 @@ node* insert(node *x, int t){
 	return fixup(x);
 }
 static node* take_min(node *x){
-	if(is_null(x)) return NULL;
-	if(is_null((*x).left)) return x;
+	if(x == NULL) return NULL;
+	if((*x).left == NULL) return x;
 	node *res = take_min((*x).left);
 	(*x).left = (*res).right;
 	update(x);
@@ -86,10 +87,10 @@ static node* take_min(node *x){
 	return res;
 }
 node* delete(node *x, int t){
-	if(is_null(x)) return NULL;
+	if(x == NULL) return NULL;
 	if(t == (*x).key){
 		node *res;
-		if(is_null((*x).right)){
+		if((*x).right == NULL){
 			res = (*x).left;
 		}else{
 			res = take_min((*x).right);
@@ -157,32 +158,22 @@ node* merge(node *l, node *r){
 	(*root).right = NULL;
 	return merge_with_root(l, root, r);
 }
-node split(node *x, int k){
+node_pair split(node *x, int k){
 	if(x == NULL){
-		node res=*new_node(0);
-		return res;
+		return (node_pair){NULL, NULL};
 	}
-	node *l =(*x).left, *r = (*x).right;
+	node *l = (*x).left, *r = (*x).right;
 	node *z = new_node((*x).key);
 	free(x);
 	int lsize = get_size(l);
 	if(k == lsize){
-		node res = *new_node(0);
-		res.left=l;
-		res.right=merge_with_root(NULL,z,r);
-		return res;
+		return (node_pair){l, merge_with_root(NULL, z, r)};
 	}
 	if(k < lsize){
-		node t = split(l, k);
-		node res = *new_node(0);
-		res.left=t.left;
-		res.right=merge_with_root(t.right,z,r);
-		return res;
+		node_pair t = split(l, k);
+		return (node_pair){t.left, merge_with_root(t.right, z, r)};
 	}else{
-		node t = split(r, k - lsize - 1);
-		node res = *new_node(0);
-		res.left=merge_with_root(l,z,t.left);
-		res.right=t.right;
-		return res;
+		node_pair t = split(r, k - lsize - 1);
+		return (node_pair){merge_with_root(l, z, t.left), t.right};
 	}
 }
