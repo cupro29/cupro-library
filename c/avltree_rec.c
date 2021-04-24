@@ -103,7 +103,7 @@ node* delete(node *x, int t){
 	}else{
 		(*x).right = delete((*x).right, t);
 	}
-	upda(x);
+	update(x);
 	return fixup(x);
 }
 node* push_front(node *x, int t){
