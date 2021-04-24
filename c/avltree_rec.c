@@ -23,7 +23,7 @@ static node* new_node(int k){
 	(*res).left = NULL;
 	(*res).right = NULL;
 	(*res).rank = 0;
-	(*res).size = 0;
+	(*res).size = 1;
 	return res;
 }
 static node* left_rotate(node* x){
