@@ -8,11 +8,14 @@ static int max(const int a, const int b){return a>b?a:b;}
 typedef struct node{
 	int key;
 	int rank;
+	int size;
 	struct node *left, *right;
 } node;
 int get_rank(node *x){return is_null(x)?-1:(*x).rank;}
+int get_size(node *x){return is_null(x)?0:(*x).size;}
 static void update(node *x){
 		(*x).rank = max(get_rank((*x).left),get_rank((*x).right)) + 1;
+		(*x).size = get_size((*x).left) + get_size((*x).right) + 1;
 }
 static node* new_node(int k){
 	node* res = (node*)malloc(sizeof(node));
@@ -20,6 +23,7 @@ static node* new_node(int k){
 	(*res).left = NULL;
 	(*res).right = NULL;
 	(*res).rank = 0;
+	(*res).size = 0;
 	return res;
 }
 static node* left_rotate(node* x){
@@ -101,4 +105,84 @@ node* delete(node *x, int t){
 	}
 	upda(x);
 	return fixup(x);
+}
+node* push_front(node *x, int t){
+	if(x == NULL) return new_node(t);
+	(*x).left = push_front((*x).left, t);
+	return fixup(x);
+}
+node* push_back(node *x, int t){
+	if(x == NULL) return new_node(t);
+	(*x).right = push_back((*x).right, t);
+	return fixup(x);
+}
+node* pop_front(node *x){
+	if((*x).left == NULL){
+		node *r = (*x).right;
+		free(x);
+		return r;
+	}
+	(*x).left = pop_front((*x).left);
+	return fixup(x);
+}
+node* pop_back(node *x){
+	if((*x).right == NULL){
+		node *l = (*x).left;
+		free(x);
+		return l;
+	}
+	(*x).right = pop_back((*x).right);
+	return fixup(x);
+}
+node* merge_with_root(node *l, node *root, node *r){
+	int ll = get_rank(l), rr = get_rank(r);
+	if(abs(ll - rr) <= 1){
+		(*root).left = l;
+		(*root).right = r;
+		update(root);
+		return root;
+	}else if(ll - rr > 1){
+		(*l).right = merge_with_root((*l).right, root, r);
+		return fixup(l);
+	}else{
+		(*r).left = merge_with_root(l, root, (*r).left);
+		return fixup(r);
+	}
+}
+node* merge(node *l, node *r){
+	if(l == NULL) return r;
+	if(r == NULL) return l;
+	node *root = take_min(r);
+	r = (*root).right;
+	(*root).right = NULL;
+	return merge_with_root(l, root, r);
+}
+node split(node *x, int k){
+	if(x == NULL){
+		node res=*new_node(0);
+		return res;
+	}
+	node *l =(*x).left, *r = (*x).right;
+	node *z = new_node((*x).key);
+	free(x);
+	int lsize = get_size(l);
+	if(k == lsize){
+		node res = *new_node(0);
+		res.left=l;
+		res.right=merge_with_root(NULL,z,r);
+		return res;
+	}
+	if(k < lsize){
+		node t = split(l, k);
+		node res = *new_node(0);
+		res.left=t.left;
+		res.right=merge_with_root(t.right,z,r);
+		return res;
+	}else{
+		node t = split(r, k - lsize - 1);
+		node res = *new_node(0);
+		res.left=merge_with_root(l,z,t.left);
+		res.right=t.right;
+		return res;
+	}
 }
