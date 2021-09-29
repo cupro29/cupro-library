@@ -1,7 +1,7 @@
 #include<vector>
 template<class T>
-struct dualsegtree{
-	dualsegtree(int n, T e, T (*fn)(T, T)):
+struct DualSegTree{
+	DualSegTree(int n, T e, T (*fn)(T, T)):
 		_n(n),
 		sz(1 << lg),
 		lg(ceil_pow2(n)),

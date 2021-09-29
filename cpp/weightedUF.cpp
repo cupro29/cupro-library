@@ -2,8 +2,8 @@
 #include<numeric>
 #include<utility>
 template<class T>
-struct weightedUF {
-	weightedUF(int n): _n(n) {
+struct WeightedUF {
+	WeightedUF(int n): _n(n) {
 		parent = std::vector<int>(n);
 		std::iota(parent.begin(), parent.end(), 0);
 		rank = std::vector<int>(n);
