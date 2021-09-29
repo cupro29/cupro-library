@@ -12,7 +12,7 @@ struct DST{
 				}
 				table.back()[j] = table[0][j];
 				for(int k = 2; k <= i && j + k <= _n; k++) {
-					table.back()[j + k - 1] = op(table.back()[j + k - 2],table[0][j + k - 1]);
+					table.back()[j + k - 1] = op(table.back()[j + k - 2], table[0][j + k - 1]);
 				}
 			}
 		}
