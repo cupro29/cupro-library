@@ -1,7 +1,7 @@
 #include <functional>
 #include <utility>
 #include <vector>
-struct HeavyLightDecomposition {
+class HeavyLightDecomposition {
   int _n;
   std::vector<int> sz, in, nxt, out, par;
   std::vector<std::vector<int>> g;
@@ -61,4 +61,8 @@ struct HeavyLightDecomposition {
     }
     return f(f(q(in[u], in[v] + 1), l), r);
   }
+  int get_in(int p) const { return in[p]; }
+  int get_out(int p) const { return out[p]; }
+  int get_nxt(int p) const { return nxt[p]; }
+  int get_par(int p) const { return par[p]; }
 };
