@@ -9,8 +9,8 @@ struct BinaryIndexedTree {
       p += p & -p;
     }
   }
-  T range(std::size_t l, std::size_t r) { return sum(r) - sum(l); }
-  T sum(std::size_t r) {
+  T range(std::size_t l, std::size_t r) const { return sum(r) - sum(l); }
+  T sum(std::size_t r) const {
     T res = 0;
     while (r > 0) {
       res += d[r - 1];

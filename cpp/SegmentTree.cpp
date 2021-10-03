@@ -1,14 +1,15 @@
+#include <functional>
 #include <vector>
 template <class T>
 struct SegmentTree {
-  SegmentTree(int n, T e, T (*f)(T, T))
+  SegmentTree(int n, T e, std::function<T(T, T)> f)
       : _n(n), sz(1 << ceil_pow2(n)), d(2 * sz, id), op(f), id(e) {}
   void set(int p, T x) {
     p += sz;
     d[p] = x;
     while (p >> 1 > 0) update(p >>= 1);
   }
-  T get(int p) { return d[p + sz]; }
+  T get(int p) const { return d[p + sz]; }
   T prod(int l, int r) {
     T sml = id, smr = id;
     l += sz;
@@ -21,15 +22,15 @@ struct SegmentTree {
     }
     return op(sml, smr);
   }
-  T all_prod() { return d[1]; }
+  T all_prod() const { return d[1]; }
 
  private:
   int _n;
   int sz;
   std::vector<T> d;
-  T (*op)(T, T);
+  std::function<T(T, T)> op;
   T id;
-  int ceil_pow2(int k) {
+  int ceil_pow2(int k) const {
     int res = 0;
     while (1 << res < k) res++;
     return res;

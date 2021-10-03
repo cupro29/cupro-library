@@ -1,8 +1,9 @@
+#include <functional>
 #include <vector>
 template <class T>
 struct DualSegmentTree {
-  DualSegmentTree(int n, T e, T (*fn)(T, T))
-      : _n(n), sz(1 << lg), lg(ceil_pow2(n)), d(2 * sz, e), op(fn), id(e) {}
+  DualSegmentTree(int n, T e, std::function<T(T, T)> f)
+      : _n(n), sz(1 << lg), lg(ceil_pow2(n)), d(2 * sz, e), op(f), id(e) {}
   void set(int index, T x) {
     int p = index + sz;
     for (int i = lg; i > 0; --i) {
@@ -54,9 +55,9 @@ struct DualSegmentTree {
   int sz;
   int lg;
   std::vector<T> d;
-  T (*op)(T, T);
+  std::function<T(T, T)> op;
   T id;
-  int ceil_pow2(int k) {
+  int ceil_pow2(int k) const {
     int res = 0;
     while (1 << res < k) res++;
     return res;

@@ -1,7 +1,8 @@
+#include <functional>
 #include <vector>
 template <class T>
 struct DisjointSparseTabel {
-  DisjointSparseTabel(const std::vector<T> &v, T (*f)(T, T))
+  DisjointSparseTabel(const std::vector<T> &v, std::function<T(T, T)> f)
       : _n(v.size()), op(f) {
     table.emplace_back(v);
     for (int i = 2; i < _n; i <<= 1) {
@@ -19,7 +20,7 @@ struct DisjointSparseTabel {
       }
     }
   }
-  T query(int l, int r) {
+  T query(int l, int r) const {
     r--;
     if (l == r) return table[0][l];
     int k = 31 - __builtin_clz(l ^ r);
@@ -29,5 +30,5 @@ struct DisjointSparseTabel {
  private:
   int _n;
   std::vector<std::vector<T> > table;
-  T (*op)(T, T);
+  std::function<T(T, T)> op;
 };
