@@ -9,8 +9,9 @@ struct SegmentTree {
     d[p] = x;
     while (p >> 1 > 0) update(p >>= 1);
   }
+  void add(int p, T x) { set(p, op(get(p), x)); }
   T get(int p) const { return d[p + sz]; }
-  T prod(int l, int r) {
+  T prod(int l, int r) const {
     T sml = id, smr = id;
     l += sz;
     r += sz;
