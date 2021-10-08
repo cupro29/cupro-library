@@ -1,13 +1,29 @@
+#include <functional>
+#include <utility>
 #include <vector>
+template <class T>
 class LinkCutTree {
- private:
   struct Node {
     Node *parent, *left, *right;
-    Node() : parent(nullptr), left(nullptr), right(nullptr) {}
-    bool is_root() {
+    T data, sum;
+    bool rev;
+    Node()
+        : parent(nullptr),
+          left(nullptr),
+          right(nullptr),
+          data(e),
+          sum(e),
+          rev(false) {}
+    bool is_root() const {
       return parent == nullptr ||
              ((*parent).left != this && (*parent).right != this);
     }
+    void update() {
+      sum = data;
+      if (left != nullptr) sum = op((*left).sum, sum);
+      if (right != nullptr) sum = op(sum, (*right).sum);
+    }
+    void toggle() { std::swap(left, right); }
     void rotate_right() {
       Node *q = parent, *r = (*q).parent;
       (*q).left = right;
@@ -104,9 +120,11 @@ class LinkCutTree {
     }
   }
   std::vector<Node> tree;
+  T e;
+  std::function<T(T, T)> op;
 
  public:
-  LinkCutTree(int n) : tree(n){};
+  LinkCutTree(int n, T e, std::function<T(T, T)> f) : tree(n), e(e), op(f){};
   void cut(int c) { _cut(&tree[c]); }
   void link(int c, int p) { _link(&tree[c], &tree[p]); }
   int lca(int u, int v) {
