@@ -1,29 +1,51 @@
 #include <algorithm>
+#include <functional>
 #include <utility>
-template <class T>
+template <class T, T (*op)(T, T), T (*e)(), class F, T (*mapping)(F, T),
+          F (*composition)(F, F), F (*id)()>
 class AVLTreeSequence {
- private:
   struct Node {
-    T key;
+    T key, sum;
+    F lz;
     int rank, size;
     Node *left, *right;
     bool rev;
     Node(T k)
-        : key(k), rank(0), size(1), left(nullptr), right(nullptr), rev(false) {}
+        : key(k),
+          sum(k),
+          lz(id()),
+          rank(0),
+          size(1),
+          left(nullptr),
+          right(nullptr),
+          rev(false) {}
     void push() {
       if (rev) {
         if (left != nullptr) (*left).toggle();
         if (right != nullptr) (*right).toggle();
         rev = false;
       }
+      if (lz != id()) {
+        if (left != nullptr) (*left).propagate(lz);
+        if (right != nullptr) (*right).propagate(lz);
+        lz = id();
+      }
     }
     void update() {
       rank = std::max(get_rank(left), get_rank(right)) + 1;
       size = get_size(left) + get_size(right) + 1;
+      sum = key;
+      if (left != nullptr) sum = op((*left).sum, sum);
+      if (right != nullptr) sum = op(sum, (*right).sum);
     }
     void toggle() {
       std::swap(left, right);
       rev ^= true;
+    }
+    void propagate(F f) {
+      key = mapping(f, key);
+      sum = mapping(f, sum);
+      lz = composition(f, lz);
     }
   };
   static int get_rank(Node *x) { return x == nullptr ? -1 : (*x).rank; }
@@ -136,18 +158,46 @@ class AVLTreeSequence {
 
  public:
   AVLTreeSequence() : root(nullptr) {}
+  int size() { return get_size(root); }
+  void push_front(T k) {
+    Node *x = new Node(k);
+    root = merge_with_root(nullptr, x, root);
+  }
   void push_back(T k) {
     Node *x = new Node(k);
     root = merge_with_root(root, x, nullptr);
+  }
+  void insert(int p, T k) {
+    std::pair<Node *, Node *> q = split(root, p);
+    root = merge_with_root(q.first, new Node(k), q.second);
+  }
+  void erase(int p) {
+    std::pair<Node *, Node *> q = split(root, p);
+    Node *x = take_min(q.second);
+    root = merge(q.first, (*x).right);
+    delete x;
   }
   T get(int p) {
     Node *x = find(root, p);
     return (*x).key;
   }
+  T prod(int l, int r) {
+    std::pair<Node *, Node *> p = split(root, l);
+    std::pair<Node *, Node *> q = split(p.second, r - l);
+    T res = (*q.first).sum;
+    root = merge(p.first, merge(q.first, q.second));
+    return res;
+  }
   void reverse(int l, int r) {
     std::pair<Node *, Node *> p = split(root, l);
     std::pair<Node *, Node *> q = split(p.second, r - l);
     (*q.first).toggle();
+    root = merge(p.first, merge(q.first, q.second));
+  }
+  void apply(int l, int r, F f) {
+    std::pair<Node *, Node *> p = split(root, l);
+    std::pair<Node *, Node *> q = split(p.second, r - l);
+    (*q.first).propagate(f);
     root = merge(p.first, merge(q.first, q.second));
   }
 };
