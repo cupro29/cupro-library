@@ -1,7 +1,7 @@
 #include <functional>
 #include <utility>
 #include <vector>
-template <class T>
+template <class T, T (*op)(T, T), T (*e)()>
 class LinkCutTree {
   struct Node {
     Node *parent, *left, *right;
@@ -11,8 +11,8 @@ class LinkCutTree {
         : parent(nullptr),
           left(nullptr),
           right(nullptr),
-          data(e),
-          sum(e),
+          data(e()),
+          sum(e()),
           rev(false) {}
     bool is_root() const {
       return parent == nullptr ||
@@ -23,7 +23,17 @@ class LinkCutTree {
       if (left != nullptr) sum = op((*left).sum, sum);
       if (right != nullptr) sum = op(sum, (*right).sum);
     }
-    void toggle() { std::swap(left, right); }
+    void toggle() {
+      std::swap(left, right);
+      rev ^= true;
+    }
+    void push() {
+      if (rev) {
+        if (left != nullptr) (*left).toggle();
+        if (right != nullptr) (*right).toggle();
+        rev = false;
+      }
+    }
     void rotate_right() {
       Node *q = parent, *r = (*q).parent;
       (*q).left = right;
@@ -31,9 +41,12 @@ class LinkCutTree {
       right = q;
       (*q).parent = this;
       parent = r;
+      (*q).update();
+      update();
       if (r != nullptr) {
         if ((*r).left == q) (*r).left = this;
         if ((*r).right == q) (*r).right = this;
+        (*r).update();
       }
     }
     void rotate_left() {
@@ -43,15 +56,21 @@ class LinkCutTree {
       left = q;
       (*q).parent = this;
       parent = r;
+      (*q).update();
+      update();
       if (r != nullptr) {
         if ((*r).left == q) (*r).left = this;
         if ((*r).right == q) (*r).right = this;
+        (*r).update();
       }
     }
     void splay() {
+      push();
       while (!is_root()) {
         Node *q = parent;
         if ((*q).is_root()) {
+          (*q).push();
+          push();
           if ((*q).left == this) {
             rotate_right();
           } else {
@@ -59,6 +78,9 @@ class LinkCutTree {
           }
         } else {
           Node *r = (*q).parent;
+          (*r).push();
+          (*q).push();
+          push();
           if ((*r).left == q) {
             if ((*q).left == this) {
               (*q).rotate_right();
@@ -85,6 +107,7 @@ class LinkCutTree {
     for (Node *p = x; p != nullptr; p = (*p).parent) {
       (*p).splay();
       (*p).right = rp;
+      (*p).update();
       rp = p;
     }
     (*x).splay();
@@ -95,12 +118,19 @@ class LinkCutTree {
     Node *p = (*c).left;
     (*c).left = nullptr;
     (*p).parent = nullptr;
+    (*c).update();
   }
   void _link(Node *c, Node *p) {
     expose(c);
     expose(p);
     (*c).parent = p;
     (*p).right = c;
+    (*p).update();
+  }
+  void _evert(Node *c) {
+    expose(c);
+    (*c).toggle();
+    (*c).push();
   }
   Node *_lca(Node *u, Node *v) {
     expose(u);
@@ -120,13 +150,26 @@ class LinkCutTree {
     }
   }
   std::vector<Node> tree;
-  T e;
-  std::function<T(T, T)> op;
 
  public:
-  LinkCutTree(int n, T e, std::function<T(T, T)> f) : tree(n), e(e), op(f){};
+  LinkCutTree(int n) : tree(n){};
   void cut(int c) { _cut(&tree[c]); }
   void link(int c, int p) { _link(&tree[c], &tree[p]); }
+  void evert(int c) { _evert(&tree[c]); }
+  T query(int u) {
+    expose(&tree[u]);
+    return tree[u].sum;
+  }
+  T query(int u, int v) {
+    evert(u);
+    return query(v);
+  }
+  void set(int u, T x) {
+    expose(&tree[u]);
+    tree[u].data = x;
+    tree[u].update();
+  }
+  void add(int u, T x) { set(u, op(x, tree[u].data)); }
   int lca(int u, int v) {
     Node *m = _lca(&tree[u], &tree[v]);
     if (m == nullptr) {
