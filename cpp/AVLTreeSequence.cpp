@@ -154,19 +154,25 @@ class AVLTreeSequence {
     if (k < lsize) return find((*x).left, k);
     return find((*x).right, k - lsize - 1);
   }
+  Node *from_vec(int l, int r, const std::vector<T> &v) {
+    if (l == r) return nullptr;
+    int m = (l + r) / 2;
+    Node *res = new Node(v[m]);
+    (*res).left = from_vec(l, m, v);
+    (*res).right = from_vec(m + 1, r, v);
+    (*res).update();
+    return res;
+  }
   Node *root;
 
  public:
-  AVLTreeSequence() : root(nullptr) {}
+  AVLTreeSequence() : AVLTreeSequence(0) {}
+  AVLTreeSequence(int n) : AVLTreeSequence(std::vector<T>(n, e())) {}
+  AVLTreeSequence(const std::vector<T> &v)
+      : root(from_vec(0, (int)v.size(), v)) {}
   int size() { return get_size(root); }
-  void push_front(T k) {
-    Node *x = new Node(k);
-    root = merge_with_root(nullptr, x, root);
-  }
-  void push_back(T k) {
-    Node *x = new Node(k);
-    root = merge_with_root(root, x, nullptr);
-  }
+  void push_front(T k) { root = merge_with_root(nullptr, new Node(k), root); }
+  void push_back(T k) { root = merge_with_root(root, new Node(k), nullptr); }
   void insert(int p, T k) {
     std::pair<Node *, Node *> q = split(root, p);
     root = merge_with_root(q.first, new Node(k), q.second);
