@@ -149,15 +149,24 @@ class AVLTreeSequence {
   void _set(Node *x, int p, T k) {
     if (x == nullptr) return;
     int lsize = get_size((*x).left);
-    if (p == lsize) {
-      (*x).key = k;
-      (*x).update();
-      return;
-    }
     if (p < lsize) {
       _set((*x).left, p, k);
+    } else if (p == lsize) {
+      (*x).key = k;
     } else {
       _set((*x).right, p - lsize - 1, k);
+    }
+    (*x).update();
+  }
+  void _add(Node *x, int p, T k) {
+    if (x == nullptr) return;
+    int lsize = get_size((*x).left);
+    if (p < lsize) {
+      _add((*x).left, p, k);
+    } else if (p == lsize) {
+      (*x).key = op(k, (*x).key);
+    } else {
+      _add((*x).right, p - lsize - 1, k);
     }
     (*x).update();
   }
@@ -181,8 +190,7 @@ class AVLTreeSequence {
   Node *root;
 
  public:
-  AVLTreeSequence() : AVLTreeSequence(0) {}
-  AVLTreeSequence(int n) : AVLTreeSequence(std::vector<T>(n, e())) {}
+  AVLTreeSequence(int n = 0) : AVLTreeSequence(std::vector<T>(n, e())) {}
   AVLTreeSequence(const std::vector<T> &v)
       : root(from_vec(0, (int)v.size(), v)) {}
   int size() { return get_size(root); }
@@ -199,6 +207,7 @@ class AVLTreeSequence {
     delete x;
   }
   void set(int p, T k) { _set(root, p, k); }
+  void add(int p, T k) { _add(root, p, k); }
   T get(int p) {
     Node *x = find(root, p);
     return (*x).key;
