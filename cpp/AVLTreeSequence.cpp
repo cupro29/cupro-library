@@ -146,6 +146,21 @@ class AVLTreeSequence {
       return std::make_pair(merge_with_root(l, x, t.first), t.second);
     }
   }
+  void _set(Node *x, int p, T k) {
+    if (x == nullptr) return;
+    int lsize = get_size((*x).left);
+    if (p == lsize) {
+      (*x).key = k;
+      (*x).update();
+      return;
+    }
+    if (p < lsize) {
+      _set((*x).left, p, k);
+    } else {
+      _set((*x).right, p - lsize - 1, k);
+    }
+    (*x).update();
+  }
   Node *find(Node *x, int k) {
     if (x == nullptr) return nullptr;
     (*x).push();
@@ -183,6 +198,7 @@ class AVLTreeSequence {
     root = merge(q.first, (*x).right);
     delete x;
   }
+  void set(int p, T k) { _set(root, p, k); }
   T get(int p) {
     Node *x = find(root, p);
     return (*x).key;
