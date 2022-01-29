@@ -3,7 +3,7 @@
 template <class T>
 struct SegmentTree {
   SegmentTree(int n, T e, std::function<T(T, T)> f)
-      : _n(n), sz(1 << ceil_pow2(n)), d(2 * sz, id), op(f), id(e) {}
+      : _n(n), sz(1 << ceil_pow2(n)), d(2 * sz, e), op(f), id(e) {}
   void set(int p, T x) {
     p += sz;
     d[p] = x;
