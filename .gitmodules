@@ -1,3 +1,6 @@
 [submodule "cpp"]
 	path = cpp
 	url = https://github.com/cupro29/cuprolib-cpp.git
+[submodule "rust"]
+	path = rust
+	url = https://github.com/cupro29/cuprolib_rs.git
